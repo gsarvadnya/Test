@@ -1,0 +1,76 @@
+---
+version: 1
+disable_existing_loggers: False
+formatters:
+  colored_format:
+    format: "%(log_color)s %(asctime)s [%(module)s]:[%(funcName)s]:%(lineno)d [%(levelname)s] [%(threadName)s]| %(message)s%(reset)s"
+    log_colors:
+      'WARNING':  'yellow'
+      'ERROR':    'red'
+      'CRITICAL': 'red,bg_white'
+    '()': 'colorlog.ColoredFormatter'
+  simple:
+    format: "%(asctime)s [%(module)s]:[%(funcName)s]:%(lineno)d [%(levelname)s] [%(threadName)s] | %(message)s"
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: colored_format
+    stream: ext://sys.stdout
+
+
+  main:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    filename: "{orgName}VCD-NSX-Migrator-{mode}-{timestamp}.log"
+    encoding: utf-8
+
+  pre-assessment:
+    class: logging.FileHandler
+    level: INFO
+    filename: "{orgName}-VCD-NSX-Migrator-{mode}-Summary-{timestamp}.log"
+    encoding: utf-8
+
+  end-state-log:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: simple
+    filename: "{orgName}-VCD-NSX-Migrator-Statelog-{mode}-{timestamp}.log"
+    encoding: utf-8
+
+loggers:
+  consoleLogger:
+    level: INFO
+    handlers:
+    - console
+    - main
+    propagate: no
+
+  mainLogger:
+    level: DEBUG
+    handlers:
+    - main
+    - console
+    propagate: no
+
+  precheckLogger:
+    level: INFO
+    handlers:
+    - pre-assessment
+    - console
+    propagate: no
+
+  endstateLogger:
+    level: DEBUG
+    handlers:
+      - end-state-log
+      - console
+    propagate: no
+
+root:
+  level: DEBUG
+  handlers:
+  - main
+  - console

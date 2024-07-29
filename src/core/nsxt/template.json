@@ -1,0 +1,22 @@
+{
+  "NSXT": {
+    "createBridgeEdgeProfile": {
+      "display_name": "{{bridgeEndpointProfileName}}",
+      "id": "{{bridgeEndpointProfileName}}",
+      "ha_mode": "ACTIVE_STANDBY",
+      "failover_mode": "PREEMPTIVE"
+    },
+    "createUplinkProfiles": {
+      "resource_type": "{{resource_type}}",
+      "description": "",
+      "display_name": "{{uplinkProfileName}}",
+      "mtu": 9000,
+      "transport_vlan": 0,
+      "teaming": {
+        "active_list": [],
+        "standby_list": null,
+        "policy": "FAILOVER_ORDER"
+      }
+    }
+  }
+}
