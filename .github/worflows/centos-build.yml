@@ -1,0 +1,35 @@
+name: CentOS Build Pipeline
+
+on:
+  push:
+    branches:
+      - master
+      - '**'  # This will match all branches, so it will trigger on any new branch being pushed
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-centos:
+    runs-on: ubuntu-latest  # This is the GitHub-hosted runner. We'll use Docker to run CentOS inside this runner.
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build CentOS Docker Image
+        run: |
+          docker build -t centos-build --file .github/docker/Dockerfile .
+
+      - name: Run CentOS Build
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace centos-build /workspace/scripts/build.sh
+          
+      - name: Upload CentOS build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: centos-binaries
+          path: build/*.tar.gz  # Adjust this to the path where your build artifacts are stored
